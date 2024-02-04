@@ -816,7 +816,11 @@ mp_err weave_to_mpi(mp_int *a,              /* out, result */
     ptmp = pa1; \
     pa1 = pa2;  \
     pa2 = ptmp
+#if __has_builtin(__builtin_align_down)
+#define MP_ALIGN(x, y) __builtin_align_down(x, y)
+#else
 #define MP_ALIGN(x, y) ((((ptrdiff_t)(x)) + ((y)-1)) & (((ptrdiff_t)0) - (y)))
+#endif
 
 /* Do modular exponentiation using integer multiply code. */
 mp_err

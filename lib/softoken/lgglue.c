@@ -113,7 +113,7 @@ sftkdb_LoadFromPath(const char *path, const char *libname)
 
     libSpec.type = PR_LibSpec_Pathname;
     libSpec.value.pathname = fullPathName;
-    lib = PR_LoadLibraryWithFlags(libSpec, PR_LD_NOW | PR_LD_LOCAL);
+    lib = PR_LoadLibraryWithFlags(libSpec, PR_LD_LAZY | PR_LD_LOCAL);
     PORT_Free(fullPathName);
     return lib;
 }
@@ -155,7 +155,7 @@ done:
         PRLibSpec libSpec;
         libSpec.type = PR_LibSpec_Pathname;
         libSpec.value.pathname = libname;
-        lib = PR_LoadLibraryWithFlags(libSpec, PR_LD_NOW | PR_LD_LOCAL);
+        lib = PR_LoadLibraryWithFlags(libSpec, PR_LD_LAZY | PR_LD_LOCAL);
     }
 
     return lib;

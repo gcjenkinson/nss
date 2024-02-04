@@ -133,7 +133,7 @@ endif
         endif
     endif
 endif
-ifeq ($(CPU_ARCH),aarch64)
+ifeq ($(CPU_ARCH), aarch64)
     ifdef CC_IS_CLANG
         DEFINES += -DUSE_HW_AES -DUSE_HW_SHA1 -DUSE_HW_SHA2
         EXTRA_SRCS += aes-armv8.c gcm-aarch64.c sha1-armv8.c sha256-armv8.c
