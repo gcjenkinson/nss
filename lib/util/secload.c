@@ -82,7 +82,7 @@ loader_LoadLibInReferenceDir(const char* referencePath, const char* name)
 #endif
             libSpec.type = PR_LibSpec_Pathname;
             libSpec.value.pathname = fullName;
-            dlh = PR_LoadLibraryWithFlags(libSpec, PR_LD_NOW | PR_LD_LOCAL
+            dlh = PR_LoadLibraryWithFlags(libSpec, PR_LD_LAZY | PR_LD_LOCAL
 #ifdef PR_LD_ALT_SEARCH_PATH
                                                        /* allow library's dependencies to be found in the same directory
                                                         * on Windows even if PATH is not set. Requires NSPR 4.8.1 . */
@@ -171,7 +171,7 @@ PORT_LoadLibraryFromOrigin(const char* existingShLibName,
 #endif
         libSpec.type = PR_LibSpec_Pathname;
         libSpec.value.pathname = newShLibName;
-        lib = PR_LoadLibraryWithFlags(libSpec, PR_LD_NOW | PR_LD_LOCAL);
+        lib = PR_LoadLibraryWithFlags(libSpec, PR_LD_LAZY | PR_LD_LOCAL);
     }
     if (NULL == lib) {
 #ifdef DEBUG_LOADER

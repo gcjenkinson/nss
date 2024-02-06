@@ -8,6 +8,11 @@
  * This contains the implementation of NSS's thread-safe arenas.
  */
 
+#if defined(__CHERI_PURE_CAPABILITY__)
+#include <stdalign.h>
+#include <stddef.h>
+#endif
+
 #ifndef BASE_H
 #include "base.h"
 #endif /* BASE_H */
@@ -380,7 +385,11 @@ nssArena_Create(void)
      * useful to us, so I'll just pick 2048.
      */
 
+#if defined(__CHERI_PURE_CAPABILITY__)
+    PL_InitArenaPool(&rv->pool, "NSS", 2048, alignof(max_align_t));
+#else
     PL_InitArenaPool(&rv->pool, "NSS", 2048, sizeof(double));
+#endif
 
 #ifdef DEBUG
     {

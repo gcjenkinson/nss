@@ -102,7 +102,7 @@ loader_LoadLibInReferenceDir(const char* referencePath, const char* name)
 #endif
             libSpec.type = PR_LibSpec_Pathname;
             libSpec.value.pathname = fullName;
-            dlh = PR_LoadLibraryWithFlags(libSpec, PR_LD_NOW | PR_LD_LOCAL);
+            dlh = PR_LoadLibraryWithFlags(libSpec, PR_LD_LAZY | PR_LD_LOCAL);
             PORT_Free(fullName);
         }
     }
@@ -156,7 +156,7 @@ loader_LoadLibrary(const char* nameToLoad)
 #endif
         libSpec.type = PR_LibSpec_Pathname;
         libSpec.value.pathname = nameToLoad;
-        lib = PR_LoadLibraryWithFlags(libSpec, PR_LD_NOW | PR_LD_LOCAL);
+        lib = PR_LoadLibraryWithFlags(libSpec, PR_LD_LAZY | PR_LD_LOCAL);
     }
     if (NULL == lib) {
 #ifdef DEBUG_LOADER
