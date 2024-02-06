@@ -23,7 +23,7 @@
 #include "ckt.h"
 #endif /* CKT_H */
 
-#include "mcom_db.h"
+#include <db.h>
 
 NSS_EXTERN_DATA NSSCKMDInstance nss_dbm_mdInstance;
 

@@ -22,8 +22,8 @@
 #include "error.h"
 
 Error LoadMechanismList(void);
-Error FipsMode(char *arg);
-Error ChkFipsMode(char *arg);
+Error FipsMode(const char *arg);
+Error ChkFipsMode(const char *arg);
 Error AddModule(char *moduleName, char *libFile, char *ciphers,
                 char *mechanisms, char *modparms);
 Error DeleteModule(char *moduleName);

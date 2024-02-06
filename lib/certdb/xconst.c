@@ -6,7 +6,7 @@
  * X.509 Extension Encoding
  */
 
-#include "prtypes.h"
+#include <prtypes.h>
 #include "seccomon.h"
 #include "secdert.h"
 #include "secoidt.h"

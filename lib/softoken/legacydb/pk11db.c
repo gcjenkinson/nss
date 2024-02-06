@@ -8,7 +8,8 @@
  */
 
 #include "lgdb.h"
-#include "mcom_db.h"
+#include <db.h>
+#include <fcntl.h>
 #include "secerr.h"
 #include "utilpars.h"
 

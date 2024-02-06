@@ -7,7 +7,8 @@
  */
 #include "lowkeyti.h"
 #include "pcert.h"
-#include "mcom_db.h"
+#include <db.h>
+#include <fcntl.h>
 #include "pcert.h"
 #include "secitem.h"
 #include "secder.h"

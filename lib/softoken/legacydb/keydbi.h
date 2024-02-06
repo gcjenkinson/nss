@@ -10,7 +10,7 @@
 
 #include "nspr.h"
 #include "seccomon.h"
-#include "mcom_db.h"
+#include <db.h>
 
 /*
  * Handle structure for open key databases

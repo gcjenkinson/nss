@@ -9,7 +9,6 @@
 #include "blapi.h"
 #include "secitem.h"
 #include "pcert.h"
-#include "mcom_db.h"
 #include "secerr.h"
 
 #include "keydbi.h"

@@ -9,7 +9,8 @@
 #define _CDBHDL_H_
 
 #include "nspr.h"
-#include "mcom_db.h"
+#include <db.h>
+#include <fcntl.h>
 #include "pcertt.h"
 #include "prtypes.h"
 

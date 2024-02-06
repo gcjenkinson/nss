@@ -5,7 +5,8 @@
 /*
  * Berkeley DB 1.85 Shim code to handle blobs.
  */
-#include "mcom_db.h"
+#include <db.h>
+#include <fcntl.h>
 #include "secitem.h"
 #include "nssb64.h"
 #include "blapi.h"

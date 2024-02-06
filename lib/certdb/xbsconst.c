@@ -6,7 +6,7 @@
  * X.509 v3 Basic Constraints Extension
  */
 
-#include "prtypes.h"
+#include <prtypes.h>
 #include <limits.h> /* for LONG_MAX */
 #include "seccomon.h"
 #include "secdert.h"

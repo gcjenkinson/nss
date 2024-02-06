@@ -29,7 +29,7 @@ endif # BUILD_SUN_PKG
 ifdef NSS_DISABLE_DBM
 DBMLIB = $(NULL)
 else
-DBMLIB = $(DIST)/lib/$(LIB_PREFIX)dbm.$(LIB_SUFFIX) 
+DBMLIB = $(NULL)
 endif
 
 ifeq ($(NSS_BUILD_UTIL_ONLY),1)

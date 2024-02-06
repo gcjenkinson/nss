@@ -16,7 +16,7 @@
  * disable FIPS mode on the internal module.
  */
 Error
-FipsMode(char *arg)
+FipsMode(const char *arg)
 {
     char *internal_name;
 
@@ -25,16 +25,18 @@ FipsMode(char *arg)
             internal_name = PR_smprintf("%s",
                                         SECMOD_GetInternalModule()->commonName);
             if (SECMOD_DeleteInternalModule(internal_name) != SECSuccess) {
-                PR_fprintf(PR_STDERR, "%s\n", SECU_Strerror(PORT_GetError()));
+                PR_fprintf(PR_STDERR, "FipsMode(true): %s (%s)\n", SECU_Strerror(PORT_GetError()), internal_name);
+                PR_smprintf_free(internal_name);
+                PR_fprintf(PR_STDERR, errStrings[FIPS_SWITCH_FAILED_ERR]);
+                return FIPS_SWITCH_FAILED_ERR;
+            }
+            if (!PK11_IsFIPS()) {
+                PR_fprintf(PR_STDERR, "FipsMode(true): in module %s", internal_name);
                 PR_smprintf_free(internal_name);
                 PR_fprintf(PR_STDERR, errStrings[FIPS_SWITCH_FAILED_ERR]);
                 return FIPS_SWITCH_FAILED_ERR;
             }
             PR_smprintf_free(internal_name);
-            if (!PK11_IsFIPS()) {
-                PR_fprintf(PR_STDERR, errStrings[FIPS_SWITCH_FAILED_ERR]);
-                return FIPS_SWITCH_FAILED_ERR;
-            }
             PR_fprintf(PR_STDOUT, msgStrings[FIPS_ENABLED_MSG]);
         } else {
             PR_fprintf(PR_STDERR, errStrings[FIPS_ALREADY_ON_ERR]);
@@ -75,7 +77,7 @@ FipsMode(char *arg)
  * If arg=="false", verify FIPS mode is disabled on the internal module.
  */
 Error
-ChkFipsMode(char *arg)
+ChkFipsMode(const char *arg)
 {
     if (!PORT_Strcasecmp(arg, "true")) {
         if (PK11_IsFIPS()) {

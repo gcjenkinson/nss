@@ -49,7 +49,7 @@ endif
 endif # MOZILLA_CLIENT
 
 ifndef NSS_DISABLE_DBM
-DBM_SRCDIR = dbm
+DBM_SRCDIR = $(NULL)
 endif
 
 ifndef NSS_DISABLE_LIBPKIX
