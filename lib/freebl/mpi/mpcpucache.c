@@ -759,7 +759,11 @@ dcbzl(char *array)
             : "memory");
 }
 
+#if __has_builtin(__builtin_align_down)
+#define PPC_DO_ALIGN(x, y) __builtin_align_down(x, y)
+#else
 #define PPC_DO_ALIGN(x, y) ((char *)((((long long)(x)) + ((y)-1)) & ~((y)-1)))
+#endif
 
 #define PPC_MAX_LINE_SIZE 256
 unsigned long

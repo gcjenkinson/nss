@@ -242,7 +242,11 @@ static PRBool isMultiProcess = PR_FALSE;
 #endif
 
 #define SID_HOWMANY(val, size) (((val) + ((size)-1)) / (size))
+#if __has_builtin(__builtin_align_up)
+#define SID_ROUNDUP(val, size) __builtin_align_up(val, size)
+#else
 #define SID_ROUNDUP(val, size) ((size)*SID_HOWMANY((val), (size)))
+#endif
 
 static sslPID myPid;
 static PRUint32 ssl_max_sid_cache_locks = MAX_SID_CACHE_LOCKS;

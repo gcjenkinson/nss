@@ -37,6 +37,11 @@
 #include "wtypes.h"
 #endif
 
+#if defined(__CHERI_PURE_CAPABILITY__)
+#include <stdalign.h>
+#include <stddef.h>
+#endif
+
 #define SET_ERROR_CODE /* place holder for code to set PR error code. */
 
 #ifdef THREADMARK
@@ -276,7 +281,11 @@ PORT_NewArena(unsigned long chunksize)
         PORT_Free(pool);
         return NULL;
     }
+#if defined(__CHERI_PURE_CAPABILITY__)
+    PL_InitArenaPool(&pool->arena, "security", chunksize, alignof(max_align_t));
+#else
     PL_InitArenaPool(&pool->arena, "security", chunksize, sizeof(double));
+#endif
     return (&pool->arena);
 }
 
@@ -284,7 +293,11 @@ void
 PORT_InitCheapArena(PORTCheapArenaPool *pool, unsigned long chunksize)
 {
     pool->magic = CHEAP_ARENAPOOL_MAGIC;
+#if defined(__CHERI_PURE_CAPABILITY__)
+    PL_InitArenaPool(&pool->arena, "security", chunksize, alignof(max_align_t));
+#else
     PL_InitArenaPool(&pool->arena, "security", chunksize, sizeof(double));
+#endif
 }
 
 void *
