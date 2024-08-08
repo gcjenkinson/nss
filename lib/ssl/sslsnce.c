@@ -971,25 +971,45 @@ InitCache(cacheDesc *cache, int maxCacheEntries, int maxCertCacheEntries,
 
     /* compute size of shared memory, and offsets of all pointers */
     ptr = 0;
+#if defined(__CHERI_PURE_CAPABILITY__)
+    cache->cacheMem = NULL;
+#else   // !__CHERI_PURE_CAPABIULITY__
     cache->cacheMem = (char *)ptr;
+#endif  // !__CHERI_PURE_CAPABIULITY__
     ptr += SID_ROUNDUP(sizeof(cacheDesc), SID_ALIGNMENT);
 
+#if defined(__CHERI_PURE_CAPABILITY__)
+    cache->sidCacheLocks = (sidCacheLock *)(uintptr_t)ptr;
+#else   // !__CHERI_PURE_CAPABIULITY__
     cache->sidCacheLocks = (sidCacheLock *)ptr;
+#endif  // !__CHERI_PURE_CAPABIULITY__
     cache->keyCacheLock = cache->sidCacheLocks + cache->numSIDCacheLocks;
     cache->certCacheLock = cache->keyCacheLock + 1;
     cache->srvNameCacheLock = cache->certCacheLock + 1;
     ptr = (ptrdiff_t)(cache->srvNameCacheLock + 1);
     ptr = SID_ROUNDUP(ptr, SID_ALIGNMENT);
 
+#if defined(__CHERI_PURE_CAPABILITY__)
+    cache->sidCacheSets = (sidCacheSet *)(uintptr_t)ptr;
+#else   // !__CHERI_PURE_CAPABIULITY__
     cache->sidCacheSets = (sidCacheSet *)ptr;
+#endif  // !__CHERI_PURE_CAPABIULITY__
     ptr = (ptrdiff_t)(cache->sidCacheSets + cache->numSIDCacheSets);
     ptr = SID_ROUNDUP(ptr, SID_ALIGNMENT);
 
+#if defined(__CHERI_PURE_CAPABILITY__)
+    cache->sidCacheData = (sidCacheEntry *)(uintptr_t)ptr;
+#else   // !__CHERI_PURE_CAPABIULITY__
     cache->sidCacheData = (sidCacheEntry *)ptr;
+#endif  // !__CHERI_PURE_CAPABIULITY__
     ptr = (ptrdiff_t)(cache->sidCacheData + cache->numSIDCacheEntries);
     ptr = SID_ROUNDUP(ptr, SID_ALIGNMENT);
 
+#if defined(__CHERI_PURE_CAPABILITY__)
+    cache->certCacheData = (certCacheEntry *)(uintptr_t)ptr;
+#else   // !__CHERI_PURE_CAPABIULITY__
     cache->certCacheData = (certCacheEntry *)ptr;
+#endif  // !__CHERI_PURE_CAPABIULITY__
     cache->sidCacheSize =
         (char *)cache->certCacheData - (char *)cache->sidCacheData;
 
@@ -1002,7 +1022,11 @@ InitCache(cacheDesc *cache, int maxCacheEntries, int maxCertCacheEntries,
     ptr = (ptrdiff_t)(cache->certCacheData + cache->numCertCacheEntries);
     ptr = SID_ROUNDUP(ptr, SID_ALIGNMENT);
 
+#if defined(__CHERI_PURE_CAPABILITY__)
+    cache->keyCacheData = (SSLWrappedSymWrappingKey *)(uintptr_t)ptr;
+#else   // !__CHERI_PURE_CAPABIULITY__
     cache->keyCacheData = (SSLWrappedSymWrappingKey *)ptr;
+#endif  // !__CHERI_PURE_CAPABIULITY__
     cache->certCacheSize =
         (char *)cache->keyCacheData - (char *)cache->certCacheData;
 
@@ -1010,26 +1034,50 @@ InitCache(cacheDesc *cache, int maxCacheEntries, int maxCertCacheEntries,
     ptr = (ptrdiff_t)(cache->keyCacheData + cache->numKeyCacheEntries);
     ptr = SID_ROUNDUP(ptr, SID_ALIGNMENT);
 
+#if defined(__CHERI_PURE_CAPABILITY__)
+    cache->keyCacheSize = (char *)(uintptr_t)ptr - (char *)cache->keyCacheData;
+#else   // !__CHERI_PURE_CAPABIULITY__
     cache->keyCacheSize = (char *)ptr - (char *)cache->keyCacheData;
+#endif  // !__CHERI_PURE_CAPABIULITY__
 
+#if defined(__CHERI_PURE_CAPABILITY__)
+    cache->ticketKeyNameSuffix = (PRUint8 *)(uintptr_t)ptr;
+#else   // !__CHERI_PURE_CAPABIULITY__
     cache->ticketKeyNameSuffix = (PRUint8 *)ptr;
+#endif  // !__CHERI_PURE_CAPABIULITY__
     ptr = (ptrdiff_t)(cache->ticketKeyNameSuffix +
                       SELF_ENCRYPT_KEY_VAR_NAME_LEN);
     ptr = SID_ROUNDUP(ptr, SID_ALIGNMENT);
 
+#if defined(__CHERI_PURE_CAPABILITY__)
+    cache->ticketEncKey = (encKeyCacheEntry *)(uintptr_t)ptr;
+#else   // !__CHERI_PURE_CAPABIULITY__
     cache->ticketEncKey = (encKeyCacheEntry *)ptr;
+#endif  // !__CHERI_PURE_CAPABIULITY__
     ptr = (ptrdiff_t)(cache->ticketEncKey + 1);
     ptr = SID_ROUNDUP(ptr, SID_ALIGNMENT);
 
+#if defined(__CHERI_PURE_CAPABILITY__)
+    cache->ticketMacKey = (encKeyCacheEntry *)(uintptr_t)ptr;
+#else   // !__CHERI_PURE_CAPABIULITY__
     cache->ticketMacKey = (encKeyCacheEntry *)ptr;
+#endif  // !__CHERI_PURE_CAPABIULITY__
     ptr = (ptrdiff_t)(cache->ticketMacKey + 1);
     ptr = SID_ROUNDUP(ptr, SID_ALIGNMENT);
 
+#if defined(__CHERI_PURE_CAPABILITY__)
+    cache->ticketKeysValid = (PRUint32 *)(uintptr_t)ptr;
+#else   // !__CHERI_PURE_CAPABIULITY__
     cache->ticketKeysValid = (PRUint32 *)ptr;
+#endif  // !__CHERI_PURE_CAPABIULITY__
     ptr = (ptrdiff_t)(cache->ticketKeysValid + 1);
     ptr = SID_ROUNDUP(ptr, SID_ALIGNMENT);
 
+#if defined(__CHERI_PURE_CAPABILITY__)
+    cache->srvNameCacheData = (srvNameCacheEntry *)(uintptr_t)ptr;
+#else   // !__CHERI_PURE_CAPABIULITY__
     cache->srvNameCacheData = (srvNameCacheEntry *)ptr;
+#endif  // !__CHERI_PURE_CAPABIULITY__
     cache->srvNameCacheSize =
         cache->numSrvNameCacheEntries * sizeof(srvNameCacheEntry);
     ptr = (ptrdiff_t)(cache->srvNameCacheData + cache->numSrvNameCacheEntries);
