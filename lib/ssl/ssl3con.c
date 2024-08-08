@@ -10622,14 +10622,22 @@ ssl3_GenerateRSAPMS(sslSocket *ss, ssl3CipherSpec *spec,
 static void
 ssl3_CSwapPK11SymKey(PK11SymKey **x, PK11SymKey **y, PRBool c)
 {
+#if defined(__CHERI_PURE_CAPABILITY__)
+    ptraddr_t mask = (ptraddr_t)c;
+#else   // !__CHERI_PURE_CAPABILITY__
     uintptr_t mask = (uintptr_t)c;
+#endif  // !__CHERI_PURE_CAPABILITY__
     unsigned int i;
     for (i = 1; i < sizeof(uintptr_t) * 8; i <<= 1) {
         mask |= mask << i;
     }
     uintptr_t x_ptr = (uintptr_t)*x;
     uintptr_t y_ptr = (uintptr_t)*y;
+#if defined(__CHERI_PURE_CAPABILITY__)
+    ptraddr_t tmp = ((ptraddr_t)x_ptr ^ (ptraddr_t)y_ptr) & mask;
+#else   // !__CHERI_PURE_CAPABILITY__
     uintptr_t tmp = (x_ptr ^ y_ptr) & mask;
+#endif  // !__CHERI_PURE_CAPABILITY__
     x_ptr = x_ptr ^ tmp;
     y_ptr = y_ptr ^ tmp;
     *x = (PK11SymKey *)x_ptr;
