@@ -142,7 +142,11 @@ nss_cmstype_lookup(SECOidTag type)
     }
     PR_Lock(nsscmstypeHashLock);
     if (nsscmstypeHash) {
+#if defined(__CHERI_PURE_CAPABILITY__)
+        typeInfo = PL_HashTableLookupConst(nsscmstypeHash, (void *)(uintptr_t)type);
+#else   // !__CHERI_PURE_CAPABILITY__
         typeInfo = PL_HashTableLookupConst(nsscmstypeHash, (void *)type);
+#endif  // !__CHERI_PURE_CAPABILITY__
     }
     PR_Unlock(nsscmstypeHashLock);
     return typeInfo;
@@ -167,7 +171,11 @@ nss_cmstype_add(SECOidTag type, nsscmstypeInfo *typeinfo)
         PR_Unlock(nsscmstypeHashLock);
         return SECFailure;
     }
+#if defined(__CHERI_PURE_CAPABILITY__)
+    entry = PL_HashTableAdd(nsscmstypeHash, (void *)(uintptr_t)type, typeinfo);
+#else   // !__CHERI_PURE_CAPABILITY__
     entry = PL_HashTableAdd(nsscmstypeHash, (void *)type, typeinfo);
+#endif  // !__CHERI_PURE_CAPABILITY__
     PR_Unlock(nsscmstypeHashLock);
     return entry ? SECSuccess : SECFailure;
 }
