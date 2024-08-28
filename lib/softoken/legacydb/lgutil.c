@@ -223,8 +223,13 @@ lg_deleteTokenKeyByHandle(SDB *sdb, CK_OBJECT_HANDLE handle)
     PRBool rem;
     PLHashTable *hashTable = lg_GetHashTable(sdb);
 
+#if defined(__CHERI_PURE_CAPABILITY__)
+    item = (SECItem *)PL_HashTableLookup(hashTable, (void *)(uintptr_t)handle);
+    rem = PL_HashTableRemove(hashTable, (void *)(uintptr_t)handle);
+#else   // !__CHERI_PURE_CAPABILITY__
     item = (SECItem *)PL_HashTableLookup(hashTable, (void *)handle);
     rem = PL_HashTableRemove(hashTable, (void *)handle);
+#endif  // !__CHERI_PURE_CAPABILITY__
     if (rem && item) {
         SECITEM_FreeItem(item, PR_TRUE);
     }
@@ -243,7 +248,11 @@ lg_addTokenKeyByHandle(SDB *sdb, CK_OBJECT_HANDLE handle, SECItem *key)
     if (item == NULL) {
         return SECFailure;
     }
+#if defined(__CHERI_PURE_CAPABILITY__)
+    entry = PL_HashTableAdd(hashTable, (void *)(uintptr_t)handle, item);
+#else   // !__CHERI_PURE_CAPABILITY__
     entry = PL_HashTableAdd(hashTable, (void *)handle, item);
+#endif  // !__CHERI_PURE_CAPABILITY__
     if (entry == NULL) {
         SECITEM_FreeItem(item, PR_TRUE);
         return SECFailure;
@@ -256,7 +265,11 @@ const SECItem *
 lg_lookupTokenKeyByHandle(SDB *sdb, CK_OBJECT_HANDLE handle)
 {
     PLHashTable *hashTable = lg_GetHashTable(sdb);
+#if defined(__CHERI_PURE_CAPABILITY__)
+    return (const SECItem *)PL_HashTableLookup(hashTable, (void *)(uintptr_t)handle);
+#else   // !__CHERI_PURE_CAPABILITY__
     return (const SECItem *)PL_HashTableLookup(hashTable, (void *)handle);
+#endif  // !__CHERI_PURE_CAPABILITY__
 }
 
 static PRIntn
