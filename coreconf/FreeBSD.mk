@@ -31,7 +31,8 @@ ifneq (,$(findstring 64,$(OS_TEST)))
 USE_64			= 1
 endif
 
-OS_CFLAGS		= $(DSO_CFLAGS) -Wall -Wno-switch -DFREEBSD -DHAVE_STRERROR -DHAVE_BSD_FLOCK
+OS_CFLAGS		= $(DSO_CFLAGS) -g -Wall -Wno-switch -DFREEBSD -DHAVE_STRERROR -DHAVE_BSD_FLOCK
+OPTIMIZER		= -O0
 
 DSO_CFLAGS		= -fPIC
 DSO_LDOPTS		= -shared -Wl,-soname -Wl,$(notdir $@)
@@ -57,9 +58,9 @@ DLL_SUFFIX		= so.1.0
 endif
 
 ifneq (,$(filter alpha ia64,$(OS_TEST)))
-MKSHLIB			= $(CC) -Wl,-Bsymbolic -lc $(DSO_LDOPTS)
+MKSHLIB			= $(CC) -g -Wl,-Bsymbolic -lc $(DSO_LDOPTS)
 else
-MKSHLIB			= $(CC) -Wl,-Bsymbolic $(DSO_LDOPTS)
+MKSHLIB			= $(CC) -g -Wl,-Bsymbolic $(DSO_LDOPTS)
 endif
 ifdef MAPFILE
 	MKSHLIB += -Wl,--version-script,$(MAPFILE)
