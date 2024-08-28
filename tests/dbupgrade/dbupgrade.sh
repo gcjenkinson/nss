@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 #
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -25,17 +25,17 @@
 dbupgrade_init()
 {
 	if [ -z "${INIT_SOURCED}" -o "${INIT_SOURCED}" != "TRUE" ]; then 
-		cd ${QADIR}/common
+		cd ../common
 		. ./init.sh
 	fi
 	
 	if [ ! -r "${CERT_LOG_FILE}" ]; then  # we need certificates here
-		cd ${QADIR}/cert 
+		cd ../cert
 		. ./cert.sh
 	fi
 
 	if [ ! -d ${HOSTDIR}/SDR ]; then  # we also need sdr as well
-		cd ${QADIR}/sdr
+		cd ../sdr
 		. ./sdr.sh
 	fi
 	

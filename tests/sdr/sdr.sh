@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /usr/bin/env bash
 #
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -124,7 +124,7 @@ sdr_main()
     cat ${ASCII_COMBINED} >> ${COMBINED_300}
   done
   echo "time pwdecrypt -i ${COMBINED_300} -o ${DECODED} -l ${LOG} -d ${PROFILE}  -f ${R_PWFILE}"
-  dtime=$(time -p (pwdecrypt -i ${COMBINED_300} -o ${DECODED} -l ${LOG} -d ${PROFILE}  -f ${R_PWFILE}) 2>&1 1>/dev/null)
+  dtime=$(time -p $(pwdecrypt -i ${COMBINED_300} -o ${DECODED} -l ${LOG} -d ${PROFILE}  -f ${R_PWFILE}) 2>&1 1>/dev/null)
   echo "------------- result ----------------------"
   cat ${DECODED}
   wc -c ${DECODED}

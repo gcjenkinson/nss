@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /usr/bin/env bash
 #
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -63,6 +63,7 @@ NSS=flags=policyOnly,moduleDB
     echo "config=\"${policy}\"" >> "$POLICY_FILE"
     echo "" >> "$POLICY_FILE"
 
+    echo "nss-policy-check -f identifier -f value "$POLICY_FILE" >${TMP}/$HOST.tmp.$$ 2>&1"
     nss-policy-check -f identifier -f value "$POLICY_FILE" >${TMP}/$HOST.tmp.$$ 2>&1
     ret=$?
     cat ${TMP}/$HOST.tmp.$$

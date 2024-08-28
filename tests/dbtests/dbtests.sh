@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /usr/bin/env bash
 #
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -359,7 +359,7 @@ dbtest_main()
       mkdir -p ${BIG_DIR}
       cp ${QADIR}/dbtests/bigdb/* ${BIG_DIR}/
       echo "time certutil -K -d ${BIG_DIR} -f ${R_PWFILE}"
-      dtime=$(time -p (certutil -K -d ${BIG_DIR} -f ${R_PWFILE}) 2>&1 1>/dev/null)
+      dtime=$(time -p $(certutil -K -d ${BIG_DIR} -f ${R_PWFILE}) 2>&1 1>/dev/null)
       echo "------------- time ----------------------"
       echo $dtime
       # now parse the real time to make sure it's subsecond
