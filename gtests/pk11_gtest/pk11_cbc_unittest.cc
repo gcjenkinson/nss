@@ -257,7 +257,11 @@ TEST_F(Pkcs11CbcPadTest, FailEncryptShortParam) {
   size_t input_len = AES_BLOCK_SIZE;
 
   // CK_NSS_GCM_PARAMS is the largest param struct used across AES modes
+#if defined(__CHERI_PURE_CAPABILITY__)
+  alignas(alignof(max_align_t)) uint8_t param_buf[sizeof(CK_NSS_GCM_PARAMS)];
+#else   // !__CHERI_PURE_CAPABILITY__
   uint8_t param_buf[sizeof(CK_NSS_GCM_PARAMS)];
+#endif  // !__CHERI_PURE_CAPABILITY__
   SECItem param = {siBuffer, param_buf, sizeof(param_buf)};
   SECItem key_item = {siBuffer, const_cast<uint8_t*>(kKeyData), 16};
 
