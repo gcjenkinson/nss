@@ -13,7 +13,7 @@
 ########################################################################
 
 # Currently used BorringSSL version
-BOGO_VERSION=48f794765b0df3310649e6a6c6f71c5cd845f445
+BOGO_VERIONS=f7825d609ae29c54b50b34066e007cf2849a971e
 
 bogo_init()
 {
@@ -27,7 +27,7 @@ bogo_init()
   cd "${HOSTDIR}/bogo"
   BORING=${BORING:=boringssl}
   if [ ! -d "$BORING" ]; then
-    git clone -q https://boringssl.googlesource.com/boringssl "$BORING"
+    git clone -q https://github.com/chromium-cheri/boringssl "$BORING"
     git -C "$BORING" checkout -q $BOGO_VERSION
   fi
 
