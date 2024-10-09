@@ -39,6 +39,10 @@
 #include "prprf.h"
 #include "prenv.h"
 
+#if defined(__CHERI_PURE_CAPABILITY__)
+#include <stdalign.h>
+#endif   // __CHERI_PURE_CAPABILITY__
+
 #define __PASTE(x, y) x##y
 #define BAD_PARAM_CAST(pMech, typeSize) (!pMech->pParameter || pMech->ulParameterLen < typeSize)
 /*
@@ -8770,7 +8774,12 @@ NSC_GetOperationState(CK_SESSION_HANDLE hSession,
         return CKR_STATE_UNSAVEABLE;
     }
 
+#if defined(__CHERI_PURE_CAPABILITY__)
+    *pulOperationStateLen = context->cipherInfoLen +
+       __builtin_align_up(sizeof(CK_MECHANISM_TYPE) + sizeof(SFTKContextType), alignof(max_align_t));
+#else   // !__CHERI_PURE_CAPABILITY__
     *pulOperationStateLen = context->cipherInfoLen + sizeof(CK_MECHANISM_TYPE) + sizeof(SFTKContextType);
+#endif  // !__CHERI_PURE_CAPABILITY__
     if (pOperationState == NULL) {
         sftk_FreeSession(session);
         return CKR_OK;
@@ -8784,6 +8793,12 @@ NSC_GetOperationState(CK_SESSION_HANDLE hSession,
     PORT_Memcpy(pOperationState, &context->currentMech,
                 sizeof(CK_MECHANISM_TYPE));
     pOperationState += sizeof(CK_MECHANISM_TYPE);
+#if defined(__CHERI_PURE_CAPABILITY__)
+    /* pOperationState must be aligned to alignof(max_align_t) to ensure that
+     * capabilities and sentry values within the cipherInfo are preserved.
+     */
+    pOperationState = __builtin_align_up(pOperationState, alignof(max_align_t));
+#endif   // __CHERI_PURE_CAPABILITY__
     PORT_Memcpy(pOperationState, context->cipherInfo, context->cipherInfoLen);
     sftk_FreeSession(session);
     return CKR_OK;
@@ -8827,7 +8842,16 @@ NSC_SetOperationState(CK_SESSION_HANDLE hSession,
         /* get the mechanism structure */
         PORT_Memcpy(&mech.mechanism, pOperationState, sizeof(CK_MECHANISM_TYPE));
         pOperationState += sizeof(CK_MECHANISM_TYPE);
+#if defined(__CHERI_PURE_CAPABILITY__)
+        /* pOperationState must be aligned to alignof(max_align_t) to ensure that
+         * capabilities and sentry values within the cipherInfo are preserved.
+         */
+        pOperationState = __builtin_align_up(pOperationState, alignof(max_align_t));
         sftk_Decrement(ulOperationStateLen, sizeof(CK_MECHANISM_TYPE));
+        ulOperationStateLen = __builtin_align_up(ulOperationStateLen, alignof(max_align_t));
+#else   // !__CHERI_PURE_CAPABILITY__
+        sftk_Decrement(ulOperationStateLen, sizeof(CK_MECHANISM_TYPE));
+#endif  // !__CHERI_PURE_CAPABILITY__
         /* should be filled in... but not necessary for hash */
         mech.pParameter = NULL;
         mech.ulParameterLen = 0;
