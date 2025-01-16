@@ -136,7 +136,7 @@ endif
         endif
     endif
 endif
-ifneq (,$(filter aarch64%, $(CPU_ARCH)))
+ifeq ($(CPU_ARCH), aarch64)
     ifdef CC_IS_CLANG
         DEFINES += -DUSE_HW_AES -DUSE_HW_SHA1 -DUSE_HW_SHA2
         EXTRA_SRCS += aes-armv8.c gcm-aarch64.c sha1-armv8.c sha256-armv8.c
@@ -154,6 +154,10 @@ ifneq (,$(filter aarch64%, $(CPU_ARCH)))
             EXTRA_SRCS += aes-armv8.c gcm-aarch64.c sha1-armv8.c sha256-armv8.c
         endif
     endif
+endif
+ifeq ($(CPU_ARCH),aarch64c)
+    DEFINES += -DUSE_HW_AES -DUSE_HW_SHA1 -DUSE_HW_SHA2
+    EXTRA_SRCS += aes-armv8.c gcm-aarch64.c sha1-armv8.c sha256-armv8.c
 endif
 ifeq ($(CPU_ARCH),arm)
 ifndef NSS_DISABLE_ARM32_NEON
